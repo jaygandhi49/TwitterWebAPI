@@ -6,16 +6,16 @@ namespace TwitterWebAPI.Service
 {
     public class TweetService : ITweetService
     {
-        public readonly AppDbContext _appDbContext;
+        public readonly TweetDbContext _appDbContext;
 
-        public TweetService(AppDbContext appDbContext)
+        public TweetService(TweetDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
 
-        public async Task<Response<Tweet>> AddTweet(Tweet TweetObject, string userName)
+        public async Task<Response<TweetMaster>> AddTweet(TweetMaster TweetObject, string userName)
         {
-            var response = new Response<Tweet>();
+            var response = new Response<TweetMaster>();
             if (string.IsNullOrEmpty(userName))
             {
                 response.ErrorMessage = "Username must be required.";
@@ -34,7 +34,7 @@ namespace TwitterWebAPI.Service
                     var createduser = await _appDbContext.Users.FirstOrDefaultAsync(u => u.LoginId.ToLower() == userName.ToLower());
                     TweetObject.CreatedDate = DateTime.Now;
                     TweetObject.UserId = createduser.Id;
-                    _appDbContext.Tweets.Add(TweetObject);
+                    _appDbContext.TweetMasters.Add(TweetObject);
                     _appDbContext.SaveChangesAsync();
                     response.Success = true;
                     response.Result = TweetObject;
@@ -43,9 +43,9 @@ namespace TwitterWebAPI.Service
             return response;
         }
 
-        public async Task<Response<TweetLike>> AddTweetLike(string UserName, int TweetId)
+        public async Task<Response<TweetAction>> AddTweetLike(string UserName, int TweetId)
         {
-            var response = new Response<TweetLike>();
+            var response = new Response<TweetAction>();
             if (string.IsNullOrEmpty(UserName))
             {
                 response.ErrorMessage = "Username must be required.";
@@ -64,7 +64,7 @@ namespace TwitterWebAPI.Service
                     var TweetLikeOject = _appDbContext.TweetLikes.ToList().Count;
                     if (user != null)
                     {
-                        TweetLike TweetLike = new TweetLike();
+                        TweetAction TweetLike = new TweetAction();
                         TweetLike.UserId = user.Id;
                         TweetLike.TweetId = TweetId;
                         TweetLike.LikeCount = TweetLikeOject + 1;
@@ -119,17 +119,17 @@ namespace TwitterWebAPI.Service
 
         public async Task<bool> DeleteTweet(int TweetId, string userName)
         {
-            var tweet = await _appDbContext.Tweets.FirstOrDefaultAsync(t => t.Id == TweetId);
-            _appDbContext.Tweets.Remove(tweet);
+            var tweet = await _appDbContext.TweetMasters.FirstOrDefaultAsync(t => t.Id == TweetId);
+            _appDbContext.TweetMasters.Remove(tweet);
             await _appDbContext.SaveChangesAsync();
             return true;
         }
 
-        public async Task<List<Tweet>> GetAllTweet()
+        public async Task<List<TweetMaster>> GetAllTweet()
         {
             try
             {
-                return await _appDbContext.Tweets.ToListAsync();
+                return await _appDbContext.TweetMasters.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -137,22 +137,22 @@ namespace TwitterWebAPI.Service
             }
         }
 
-        public async Task<List<Tweet>> GetAllTweetByUser(string userName)
+        public async Task<List<TweetMaster>> GetAllTweetByUser(string userName)
         {
             var user = _appDbContext.Users.FirstOrDefault(a => a.LoginId == userName);
-            return await _appDbContext.Tweets.Where(a => a.UserId == user.Id).ToListAsync();
+            return await _appDbContext.TweetMasters.Where(a => a.UserId == user.Id).ToListAsync();
         }
 
-        public async Task<Tweet> GetTweetById(int TweetId)
+        public async Task<TweetMaster> GetTweetById(int TweetId)
         {
-            var tweetObj = _appDbContext.Tweets.FirstOrDefaultAsync(a => a.Id == TweetId);
+            var tweetObj = _appDbContext.TweetMasters.FirstOrDefaultAsync(a => a.Id == TweetId);
             return await tweetObj;
         }
 
-        public async Task<Tweet> UpdateTweet(Tweet TweetObject, string userName)
+        public async Task<TweetMaster> UpdateTweet(TweetMaster TweetObject, string userName)
         {
             TweetObject.ModifiedDate = DateTime.Now;
-            _appDbContext.Tweets.Update(TweetObject);
+            _appDbContext.TweetMasters.Update(TweetObject);
             _appDbContext.SaveChanges();
             return TweetObject;
         }

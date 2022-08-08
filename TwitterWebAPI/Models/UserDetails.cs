@@ -2,7 +2,7 @@
 
 namespace TwitterWebAPI.Models
 {
-    public class User
+    public class UserDetails
     {
         [Key]
         public int Id { get; set; }

@@ -8,10 +8,10 @@ namespace TwitterWebAPI.Service
 {
     public class UserService : IUserService
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly TweetDbContext _appDbContext;
         public readonly IMapper _mapper;
 
-        public UserService(AppDbContext appDbContext, IMapper mapper)
+        public UserService(TweetDbContext appDbContext, IMapper mapper)
         {
             _appDbContext = appDbContext;
             _mapper = mapper;

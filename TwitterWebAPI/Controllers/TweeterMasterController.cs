@@ -8,11 +8,11 @@ namespace TwitterWebAPI.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class TweetController : Controller
+    public class TweeterMasterController : Controller
     {
         private readonly ITweetService _TweetService;
 
-        public TweetController(ITweetService tweetService)
+        public TweeterMasterController(ITweetService tweetService)
         {
             _TweetService = tweetService;
         }
@@ -51,7 +51,7 @@ namespace TwitterWebAPI.Controllers
         }
 
         [HttpPost("{userName}/add")]
-        public async Task<IActionResult> AddTweet(string userName, Tweet tweet)
+        public async Task<IActionResult> AddTweet(string userName, TweetMaster tweet)
         {
             var response = await _TweetService.AddTweet(tweet, userName);
             if (!response.Success)
@@ -62,7 +62,7 @@ namespace TwitterWebAPI.Controllers
         }
 
         [HttpPut("{userName}/udpate/{id}")]
-        public async Task<IActionResult> Update(string userName, int id, Tweet tweet)
+        public async Task<IActionResult> Update(string userName, int id, TweetMaster tweet)
         {
             var response = await _TweetService.UpdateTweet(tweet, userName);
             if (response != null)

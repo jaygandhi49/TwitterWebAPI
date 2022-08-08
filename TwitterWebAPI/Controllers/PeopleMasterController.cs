@@ -9,11 +9,11 @@ namespace TwitterWebAPI.Controllers
     [Authorize]
     [Route("api/tweets/user")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class PeopleMasterController : ControllerBase
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public PeopleMasterController(IUserService userService)
         {
             _userService = userService;
         }

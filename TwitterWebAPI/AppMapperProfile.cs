@@ -8,7 +8,7 @@ namespace TwitterWebAPI
     {
         public AppMapperProfile()
         {
-            CreateMap<User, GetUserDto>();
+            CreateMap<UserDetails, GetUserDto>();
         }
     }
 }

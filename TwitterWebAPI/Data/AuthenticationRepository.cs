@@ -10,18 +10,18 @@ using TwitterWebAPI.Utilities;
 
 namespace TwitterWebAPI.Data
 {
-    public class AuthRepository : IAuthRepository
+    public class AuthenticationRepository : IAuthenticateRepository
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly TweetDbContext _appDbContext;
         private readonly IConfiguration _configuration;
 
-        public AuthRepository(AppDbContext appDbContext, IConfiguration configuration)
+        public AuthenticationRepository(TweetDbContext appDbContext, IConfiguration configuration)
         {
             _appDbContext = appDbContext;
             _configuration = configuration;
         }
 
-        public async Task<Response<int>> RegisterAsync(User user, string password)
+        public async Task<Response<int>> RegisterAsync(UserDetails user, string password)
         {
             Response<int> response = new Response<int>();
 
@@ -90,7 +90,7 @@ namespace TwitterWebAPI.Data
             }
         }
 
-        private string CreateJWTToken(User user)
+        private string CreateJWTToken(UserDetails user)
         {
             List<Claim> claims = new List<Claim>
             {

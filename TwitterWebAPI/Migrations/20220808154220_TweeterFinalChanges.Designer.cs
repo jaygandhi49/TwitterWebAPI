@@ -11,9 +11,9 @@ using TwitterWebAPI.Data;
 
 namespace TwitterWebAPI.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
-    [Migration("20220808115008_TweetTables")]
-    partial class TweetTables
+    [DbContext(typeof(TweetDbContext))]
+    [Migration("20220808154220_TweeterFinalChanges")]
+    partial class TweeterFinalChanges
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,75 @@ namespace TwitterWebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("TwitterWebAPI.Models.Tweet", b =>
+            modelBuilder.Entity("TwitterWebAPI.Models.TweetAction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("LikeCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TweetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TweetMasterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserDetailsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TweetMasterId");
+
+                    b.HasIndex("UserDetailsId");
+
+                    b.ToTable("TweetLikes");
+                });
+
+            modelBuilder.Entity("TwitterWebAPI.Models.TweetComment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ParentCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TweetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TweetMasterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserDetailsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TweetMasterId");
+
+                    b.HasIndex("UserDetailsId");
+
+                    b.ToTable("TweetComments");
+                });
+
+            modelBuilder.Entity("TwitterWebAPI.Models.TweetMaster", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,58 +115,10 @@ namespace TwitterWebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tweets");
+                    b.ToTable("TweetMasters");
                 });
 
-            modelBuilder.Entity("TwitterWebAPI.Models.TweetComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ParentCommentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TweetId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TweetComments");
-                });
-
-            modelBuilder.Entity("TwitterWebAPI.Models.TweetLike", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("LikeCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TweetId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TweetLikes");
-                });
-
-            modelBuilder.Entity("TwitterWebAPI.Models.User", b =>
+            modelBuilder.Entity("TwitterWebAPI.Models.UserDetails", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,6 +157,44 @@ namespace TwitterWebAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("TwitterWebAPI.Models.TweetAction", b =>
+                {
+                    b.HasOne("TwitterWebAPI.Models.TweetMaster", "TweetMaster")
+                        .WithMany()
+                        .HasForeignKey("TweetMasterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TwitterWebAPI.Models.UserDetails", "UserDetails")
+                        .WithMany()
+                        .HasForeignKey("UserDetailsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TweetMaster");
+
+                    b.Navigation("UserDetails");
+                });
+
+            modelBuilder.Entity("TwitterWebAPI.Models.TweetComment", b =>
+                {
+                    b.HasOne("TwitterWebAPI.Models.TweetMaster", "TweetMaster")
+                        .WithMany()
+                        .HasForeignKey("TweetMasterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TwitterWebAPI.Models.UserDetails", "UserDetails")
+                        .WithMany()
+                        .HasForeignKey("UserDetailsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TweetMaster");
+
+                    b.Navigation("UserDetails");
                 });
 #pragma warning restore 612, 618
         }

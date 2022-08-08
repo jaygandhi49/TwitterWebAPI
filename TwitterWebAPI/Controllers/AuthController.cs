@@ -9,9 +9,9 @@ namespace TwitterWebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _authRepository;
+        private readonly IAuthenticateRepository _authRepository;
 
-        public AuthController(IAuthRepository authRepository)
+        public AuthController(IAuthenticateRepository authRepository)
         {
             _authRepository = authRepository;
         }
@@ -20,7 +20,7 @@ namespace TwitterWebAPI.Controllers
         public async Task<IActionResult> RegisterAsync(UserDto userDto)
         {
             var response = await _authRepository.RegisterAsync(
-                new User
+                new UserDetails
                 {
                     LoginId = userDto.LoginId,
                     Email = userDto.Email,

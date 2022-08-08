@@ -7,7 +7,7 @@ namespace TwitterWebAPI.Utilities
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            var _appDbcontext = (AppDbContext)validationContext.GetService(typeof(AppDbContext));
+            var _appDbcontext = (TweetDbContext)validationContext.GetService(typeof(TweetDbContext));
             var entity = _appDbcontext?.Users.SingleOrDefault(u => u.Email.ToLower() == value.ToString().ToLower() 
                                                             || u.LoginId.ToLower() == value.ToString().ToLower());
 

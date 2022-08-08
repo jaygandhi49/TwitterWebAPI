@@ -12,12 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 // builder.Services.AddAutoMapper(typeof(Program).Assembly);
-builder.Services.AddDbContextPool<AppDbContext>(options =>
+builder.Services.AddDbContextPool<TweetDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("TwitterAppDb"));
 });
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-builder.Services.AddScoped<IAuthRepository,AuthRepository>();
+builder.Services.AddScoped<IAuthenticateRepository,AuthenticationRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITweetService, TweetService>();
 
